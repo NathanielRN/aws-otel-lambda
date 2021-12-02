@@ -20,6 +20,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+        architecture: [ amd64, arm64 ]
         # FIXME: (enowell) Both .NET and Go Sample Apps want to Soak Test
         # the same collector-only lambda layer. We count on Soaking Tests to
         # test whether a layer is ready for release. However, the current
@@ -211,7 +212,11 @@ jobs:
         run: |
           docker run --rm -e AWS_DEFAULT_REGION -e AWS_ACCESS_KEY_ID -e AWS_SECRET_ACCESS_KEY -e AWS_SESSION_TOKEN \
             public.ecr.aws/aws-otel-test/lambda-soak:latest -n ${{ env.TERRAFORM_LAMBDA_FUNCTION_NAME }} \
+<<<<<<< HEAD
             -e ${{ steps.extract-endpoint.outputs.stdout }} ${{ github.event.inputs.soak_config }} ${{ env.SOAKING_TEST_CONFIG }}
+=======
+            -e ${{ steps.extract-endpoint.outputs.stdout }} ${{ github.event.inputs.soak_config }} ${{ matrix.soak_config }}
+>>>>>>> d336e14 (Add arm64 support to Soaking workflow)
       - name: Remove sdk layers from terraform management to prevent deletion.
         if: ${{ matrix.language != 'go' }}
         run:  terraform state rm module.test.aws_lambda_layer_version.sdk_layer
